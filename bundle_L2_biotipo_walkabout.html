@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bundle Completo — Metodo Walkabout Program</title>
+<meta name="description" content="Il tuo Bundle Walkabout: strumenti interattivi, andamento settimanale e mensile.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F7F5F0;color:#1C1C1C;min-height:100vh;padding:1rem 0 3rem}
+.page{max-width:600px;margin:0 auto;padding:0 1rem}
+
+/* HERO */
+.hero{background:#1C1C1C;border-radius:16px;padding:2rem 1.5rem;margin-bottom:1rem;text-align:center}
+.hero-tag{font-size:11px;font-weight:600;color:#D4A017;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem}
+.hero-title{font-size:27px;font-weight:600;color:#fff;line-height:1.2;margin-bottom:.4rem}
+.hero-sub{font-size:13px;color:#999;line-height:1.6;margin-bottom:1.1rem}
+.hero-badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.badge{display:inline-block;background:#2A2A2A;border:0.5px solid #3A3A3A;color:#CCC;font-size:12px;padding:4px 12px;border-radius:20px}
+.badge-gold{background:#D4A017;border-color:#D4A017;color:#1C1C1C;font-weight:600}
+
+/* CARD BASE */
+.card{background:#fff;border:0.5px solid #E0DDD8;border-radius:16px;padding:1.25rem;margin-bottom:1rem}
+.sec-title{font-size:12px;font-weight:600;color:#D4A017;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.85rem}
+
+/* PROGRESS */
+.prog-hdr{display:flex;justify-content:space-between;margin-bottom:.4rem}
+.prog-label{font-size:13px;color:#777}
+.prog-val{font-size:13px;font-weight:600;color:#1C1C1C}
+.prog-bar{height:6px;background:#EDE9E0;border-radius:4px;overflow:hidden;margin-bottom:1rem}
+.prog-fill{height:100%;background:#D4A017;border-radius:4px}
+.week-row{display:flex;gap:6px;margin-bottom:1rem}
+.week-pill{flex:1;padding:9px 4px;border:0.5px solid #E0DDD8;border-radius:10px;text-align:center;cursor:pointer;transition:all .15s;background:#fff}
+.week-pill.done{background:#D4A017;border-color:#D4A017}
+.week-pill.done .wp-num,.week-pill.done .wp-label{color:#1C1C1C}
+.week-pill.active{border-color:#D4A017;background:#fff}
+.week-pill.active .wp-num{color:#D4A017}
+.week-pill.locked{opacity:.38;cursor:default}
+.wp-num{font-size:12px;font-weight:600;color:#1C1C1C;margin-bottom:1px}
+.wp-label{font-size:10px;color:#777}
+
+/* TOOLS */
+.tool-card{background:#fff;border:0.5px solid #E0DDD8;border-radius:12px;padding:1rem;display:flex;align-items:center;gap:12px;margin-bottom:8px;transition:border-color .15s}
+.tool-card:hover{border-color:#D4A017}
+.tool-icon{width:40px;height:40px;border-radius:10px;background:#FAF3DC;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;color:#7A5800}
+.tool-info{flex:1}
+.tool-name{font-size:14px;font-weight:500;color:#1C1C1C;margin-bottom:2px}
+.tool-desc{font-size:12px;color:#777;line-height:1.4}
+.tool-btn{padding:7px 14px;background:#D4A017;border:none;border-radius:8px;font-size:12px;font-weight:600;color:#1C1C1C;cursor:pointer;white-space:nowrap;transition:background .15s}
+.tool-btn:hover{background:#E8B520}
+.tool-btn-lock{padding:7px 12px;background:#F5F5F5;color:#999;border:0.5px solid #E0DDD8;border-radius:8px;font-size:12px;cursor:default;white-space:nowrap}
+
+/* MODAL OVERLAY */
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:1000;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:600px;max-height:88vh;overflow-y:auto;padding:1.5rem 1.25rem 2rem;position:relative}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.modal-title{font-size:16px;font-weight:600;color:#1C1C1C}
+.modal-close{width:32px;height:32px;border-radius:50%;border:none;background:#F0EDE8;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:#777;flex-shrink:0}
+.modal-close:hover{background:#E0DDD8}
+.modal-icon{width:48px;height:48px;border-radius:14px;background:#FAF3DC;display:flex;align-items:center;justify-content:center;font-size:24px;color:#7A5800;margin-bottom:1rem}
+
+/* FORM FIELDS */
+.field-label{font-size:12px;font-weight:600;color:#777;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.field-group{margin-bottom:1rem}
+.slider-wrap{display:flex;align-items:center;gap:10px}
+.slider-val{font-size:18px;font-weight:700;color:#D4A017;min-width:24px;text-align:center}
+input[type=range]{flex:1;accent-color:#D4A017}
+.radio-group{display:flex;flex-wrap:wrap;gap:7px}
+.radio-opt{padding:7px 14px;border:1.5px solid #E0DDD8;border-radius:20px;font-size:13px;cursor:pointer;transition:all .15s;background:#fff;user-select:none}
+.radio-opt.sel{border-color:#D4A017;background:#FAF3DC;font-weight:500}
+textarea.field-input{width:100%;border:1.5px solid #E0DDD8;border-radius:10px;padding:.75rem;font-size:14px;font-family:inherit;resize:none;min-height:80px;outline:none;transition:border-color .15s}
+textarea.field-input:focus{border-color:#D4A017}
+.save-btn{width:100%;padding:13px;background:#D4A017;border:none;border-radius:12px;font-size:14px;font-weight:700;color:#1C1C1C;cursor:pointer;margin-top:.5rem;transition:background .15s}
+.save-btn:hover{background:#E8B520}
+.save-confirm{text-align:center;font-size:13px;color:#2D6A4F;font-weight:500;margin-top:.75rem;display:none}
+
+/* TIMER */
+.timer-circle{width:140px;height:140px;border-radius:50%;border:6px solid #EDE9E0;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:1rem auto;position:relative}
+.timer-circle.active{border-color:#D4A017}
+.timer-num{font-size:36px;font-weight:700;color:#1C1C1C}
+.timer-phase{font-size:12px;color:#777;margin-top:2px}
+.timer-btn{padding:12px 32px;background:#D4A017;border:none;border-radius:12px;font-size:14px;font-weight:700;color:#1C1C1C;cursor:pointer;margin:0 auto;display:block}
+.timer-btn:hover{background:#E8B520}
+.timer-btn.stop{background:#F0EDE8;color:#777}
+.timer-instruction{text-align:center;font-size:14px;color:#555;margin-top:.75rem;line-height:1.5;min-height:44px}
+.timer-steps{display:flex;gap:6px;justify-content:center;margin-top:.75rem}
+.t-step{width:32px;height:32px;border-radius:50%;border:1.5px solid #E0DDD8;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;color:#999}
+.t-step.active{border-color:#D4A017;background:#FAF3DC;color:#7A5800}
+.t-step.done{background:#D4A017;border-color:#D4A017;color:#1C1C1C}
+
+/* ACQUA */
+.acqua-bicchieri{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:1rem 0}
+.bicchiere{width:44px;height:44px;border-radius:10px;border:1.5px solid #E0DDD8;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;transition:all .15s;background:#fff}
+.bicchiere.pieno{background:#D4A017;border-color:#D4A017}
+.acqua-count{text-align:center;font-size:28px;font-weight:700;color:#D4A017;margin-bottom:4px}
+.acqua-sub{text-align:center;font-size:13px;color:#777;margin-bottom:.75rem}
+.acqua-reset{display:block;margin:0 auto;padding:8px 20px;background:#F0EDE8;border:none;border-radius:8px;font-size:12px;color:#777;cursor:pointer}
+
+/* ESERCIZI */
+.es-card{background:#F7F5F0;border-radius:10px;padding:.85rem 1rem;margin-bottom:.6rem;display:flex;gap:12px;align-items:flex-start}
+.es-num{width:28px;height:28px;border-radius:50%;background:#D4A017;color:#1C1C1C;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.es-info{flex:1}
+.es-name{font-size:14px;font-weight:600;color:#1C1C1C;margin-bottom:3px}
+.es-detail{font-size:12px;color:#777;line-height:1.5}
+.es-timer-btn{padding:6px 12px;background:#1C1C1C;border:none;border-radius:8px;font-size:11px;font-weight:600;color:#D4A017;cursor:pointer;flex-shrink:0;margin-top:2px}
+.es-filter{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.es-filter-btn{padding:6px 14px;border:1.5px solid #E0DDD8;border-radius:20px;font-size:12px;cursor:pointer;background:#fff;transition:all .15s}
+.es-filter-btn.active{border-color:#D4A017;background:#FAF3DC;font-weight:500}
+
+/* CHECK-IN */
+.checkin-item{background:#F7F5F0;border-radius:10px;padding:1rem;margin-bottom:.75rem}
+.checkin-q{font-size:14px;font-weight:500;color:#1C1C1C;margin-bottom:.6rem;line-height:1.4}
+.stelle{display:flex;gap:6px}
+.stella{font-size:24px;cursor:pointer;transition:transform .1s;user-select:none}
+.stella:hover{transform:scale(1.2)}
+
+/* GRAFICO */
+.chart-bar-row{display:flex;align-items:center;gap:8px;padding:.45rem 0;border-bottom:0.5px solid #F0EDE8}
+.chart-bar-row:last-child{border-bottom:none}
+.chart-day{font-size:11px;color:#777;min-width:52px}
+.chart-mini-bar{flex:1;height:5px;background:#EDE9E0;border-radius:4px;overflow:hidden}
+.chart-mini-fill{height:100%;background:#D4A017;border-radius:4px}
+.chart-mini-fill.low{background:#F5C97A}
+.chart-mini-fill.med{background:#D4A017}
+.chart-mini-fill.high{background:#B8860B}
+.chart-val{min-width:28px;text-align:right;font-weight:600;color:#1C1C1C;font-size:12px}
+.chart-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.chart-dot.green{background:#2ECC71}
+.chart-dot.yellow{background:#F1C40F}
+.chart-dot.red{background:#E74C3C}
+
+/* GRAFICO MENSILE */
+.monthly-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:.5rem}
+.m-day{aspect-ratio:1;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500}
+.m-day.empty{background:transparent;color:transparent}
+.m-day.done-high{background:#D4A017;color:#1C1C1C}
+.m-day.done-med{background:#F0C94A;color:#1C1C1C}
+.m-day.done-low{background:#FAF3DC;color:#7A5800}
+.m-day.today{background:#1C1C1C;color:#fff}
+.m-day.future{background:#F0EDE8;color:#CCC}
+.month-legend{display:flex;gap:12px;margin-top:.6rem;flex-wrap:wrap}
+.ml-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#777}
+.ml-dot{width:8px;height:8px;border-radius:2px}
+
+.nota{font-size:12px;color:#999;line-height:1.6;margin-top:1.5rem;padding-top:1rem;border-top:0.5px solid #E0DDD8;text-align:center}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Metodo Walkabout Program — Livello 2</div>
+  <div class="hero-title">Bundle Completo</div>
+  <div class="hero-sub">Alimentazione consapevole · Allenamento per biotipo · Integrazione mirata.</div>
+  <div class="hero-badges">
+    <span class="badge-gold badge">✦ Accesso attivo</span>
+    <span class="badge">6 strumenti</span>
+    <span class="badge">Livello 2</span>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="card">
+  <div class="prog-hdr">
+    <span class="prog-label">Il tuo progresso</span>
+    <span class="prog-val">Settimana 2 di 4</span>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" style="width:37%"></div></div>
+  <div class="week-row">
+    <div class="week-pill done"><div class="wp-num">Sett. 1</div><div class="wp-label">✓ Completata</div></div>
+    <div class="week-pill active"><div class="wp-num">Sett. 2</div><div class="wp-label">In corso</div></div>
+    <div class="week-pill locked"><div class="wp-num">Sett. 3</div><div class="wp-label">🔒 Bloccata</div></div>
+    <div class="week-pill locked"><div class="wp-num">Sett. 4</div><div class="wp-label">🔒 Bloccata</div></div>
+  </div>
+</div>
+
+<!-- STRUMENTI -->
+<div class="card">
+  <div class="sec-title">I tuoi strumenti — usa ogni giorno</div>
+
+  <div class="tool-card">
+    <div class="tool-icon"><i class="ti ti-edit"></i></div>
+    <div class="tool-info">
+      <div class="tool-name">Diario giornaliero</div>
+      <div class="tool-desc">2 minuti ogni mattina. Gonfiore, energia, umore, azione del giorno.</div>
+    </div>
+    <button class="tool-btn" onclick="openModal('diario')">Apri →</button>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-icon"><i class="ti ti-chart-bar"></i></div>
+    <div class="tool-info">
+      <div class="tool-name">Check-in settimanale</div>
+      <div class="tool-desc">Fine settimana. Rivedi i progressi e sblocca la settimana successiva.</div>
+    </div>
+    <button class="tool-btn" onclick="openModal('checkin')">Apri →</button>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-icon"><i class="ti ti-run"></i></div>
+    <div class="tool-info">
+      <div class="tool-name">Guida esercizi con timer</div>
+      <div class="tool-desc">Scheda con istruzioni passo-passo e timer per serie e recupero.</div>
+    </div>
+    <button class="tool-btn" onclick="openModal('esercizi')">Apri →</button>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-icon"><i class="ti ti-salad"></i></div>
+    <div class="tool-info">
+      <div class="tool-name">Sensazioni dopo il pasto</div>
+      <div class="tool-desc">Trascrivi rapidamente come ti sei sentita dopo aver mangiato.</div>
+    </div>
+    <button class="tool-btn" onclick="openModal('planner')">Apri →</button>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-icon"><i class="ti ti-droplets"></i></div>
+    <div class="tool-info">
+      <div class="tool-name">Tracker idratazione</div>
+      <div class="tool-desc">Formula peso÷7 = bicchieri al giorno. Tieni il conto con un tocco.</div>
+    </div>
+    <button class="tool-btn" onclick="openModal('acqua')">Apri →</button>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-icon"><i class="ti ti-wind"></i></div>
+    <div class="tool-info">
+      <div class="tool-name">Tecnica 4+1+4 — respiro</div>
+      <div class="tool-desc">Il tuo interruttore di calma prima di ogni pasto. Guidata, 90 secondi.</div>
+    </div>
+    <button class="tool-btn" onclick="openModal('respiro')">Apri →</button>
+  </div>
+</div>
+
+<!-- ANDAMENTO SETTIMANALE -->
+<div class="card">
+  <div class="sec-title">Il tuo andamento questa settimana</div>
+  <div style="display:flex;gap:16px;font-size:12px;color:#777;margin-bottom:.85rem;flex-wrap:wrap">
+    <span><span style="font-weight:600;color:#1C1C1C">Energia media:</span> 3.8/5</span>
+    <span><span style="font-weight:600;color:#1C1C1C">Gonfiore:</span> ↓ migliorato</span>
+    <span><span style="font-weight:600;color:#1C1C1C">Check-in:</span> 4/5 giorni</span>
+  </div>
+  <div class="chart-bar-row"><span class="chart-day">Lun 12</span><div class="chart-mini-bar"><div class="chart-mini-fill med" style="width:60%"></div></div><span class="chart-val">3</span><div class="chart-dot green"></div></div>
+  <div class="chart-bar-row"><span class="chart-day">Mar 13</span><div class="chart-mini-bar"><div class="chart-mini-fill high" style="width:80%"></div></div><span class="chart-val">4</span><div class="chart-dot green"></div></div>
+  <div class="chart-bar-row"><span class="chart-day">Mer 14</span><div class="chart-mini-bar"><div class="chart-mini-fill med" style="width:60%"></div></div><span class="chart-val">3</span><div class="chart-dot yellow"></div></div>
+  <div class="chart-bar-row"><span class="chart-day">Gio 15</span><div class="chart-mini-bar"><div class="chart-mini-fill high" style="width:100%"></div></div><span class="chart-val">5</span><div class="chart-dot green"></div></div>
+  <div class="chart-bar-row"><span class="chart-day">Ven 16</span><div class="chart-mini-bar"><div class="chart-mini-fill low" style="width:40%"></div></div><span class="chart-val">2</span><div class="chart-dot red"></div></div>
+  <div class="chart-bar-row" style="opacity:.35"><span class="chart-day">Sab 17</span><div class="chart-mini-bar"><div class="chart-mini-fill" style="width:0%"></div></div><span class="chart-val">—</span><div class="chart-dot" style="background:#E0DDD8"></div></div>
+  <div class="chart-bar-row" style="opacity:.35"><span class="chart-day">Dom 18</span><div class="chart-mini-bar"><div class="chart-mini-fill" style="width:0%"></div></div><span class="chart-val">—</span><div class="chart-dot" style="background:#E0DDD8"></div></div>
+  <div style="display:flex;gap:12px;margin-top:.85rem;font-size:11px;color:#777;flex-wrap:wrap">
+    <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#2ECC71;display:inline-block"></span>Pasto ok + ritmi rispettati</span>
+    <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#F1C40F;display:inline-block"></span>Parzialmente</span>
+    <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#E74C3C;display:inline-block"></span>Fuori ritmo</span>
+  </div>
+</div>
+
+<!-- ANDAMENTO MENSILE -->
+<div class="card">
+  <div class="sec-title">Andamento mensile — Maggio 2026</div>
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:.4rem">
+    <div style="text-align:center;font-size:10px;color:#999;padding:2px">L</div>
+    <div style="text-align:center;font-size:10px;color:#999;padding:2px">M</div>
+    <div style="text-align:center;font-size:10px;color:#999;padding:2px">M</div>
+    <div style="text-align:center;font-size:10px;color:#999;padding:2px">G</div>
+    <div style="text-align:center;font-size:10px;color:#999;padding:2px">V</div>
+    <div style="text-align:center;font-size:10px;color:#999;padding:2px">S</div>
+    <div style="text-align:center;font-size:10px;color:#999;padding:2px">D</div>
+  </div>
+  <div class="monthly-grid" id="monthly-cal"></div>
+  <div class="month-legend">
+    <div class="ml-item"><div class="ml-dot" style="background:#D4A017"></div>Energia alta</div>
+    <div class="ml-item"><div class="ml-dot" style="background:#F0C94A"></div>Energia media</div>
+    <div class="ml-item"><div class="ml-dot" style="background:#FAF3DC"></div>Energia bassa</div>
+    <div class="ml-item"><div class="ml-dot" style="background:#1C1C1C"></div>Oggi</div>
+    <div class="ml-item"><div class="ml-dot" style="background:#F0EDE8"></div>Non ancora</div>
+  </div>
+</div>
+
+<div class="nota">I contenuti di questa piattaforma sono a scopo educativo e informativo. Non sostituiscono la consulenza medica, nutrizionale o fisioterapica personalizzata.</div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MODALI -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+<!-- DIARIO -->
+<div class="modal-overlay" id="modal-diario" onclick="closeOnBg(event,'diario')">
+<div class="modal-box">
+  <div class="modal-header">
+    <span class="modal-title">Diario giornaliero</span>
+    <button class="modal-close" onclick="closeModal('diario')">×</button>
+  </div>
+  <div class="modal-icon"><i class="ti ti-edit"></i></div>
+
+  <div class="field-group">
+    <div class="field-label">Come ti senti questa mattina? (energia 1–5)</div>
+    <div class="slider-wrap">
+      <span>😴</span>
+      <input type="range" min="1" max="5" value="3" id="sl-energia" oninput="document.getElementById('val-energia').textContent=this.value">
+      <span>⚡</span>
+      <span class="slider-val" id="val-energia">3</span>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <div class="field-label">Gonfiore stamattina</div>
+    <div class="radio-group">
+      <div class="radio-opt" onclick="selRadio(this,'gon')">Assente</div>
+      <div class="radio-opt" onclick="selRadio(this,'gon')">Lieve</div>
+      <div class="radio-opt" onclick="selRadio(this,'gon')">Moderato</div>
+      <div class="radio-opt" onclick="selRadio(this,'gon')">Forte</div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <div class="field-label">Umore</div>
+    <div class="radio-group">
+      <div class="radio-opt" onclick="selRadio(this,'umore')">😊 Serena</div>
+      <div class="radio-opt" onclick="selRadio(this,'umore')">😐 Neutro</div>
+      <div class="radio-opt" onclick="selRadio(this,'umore')">😔 Giù</div>
+      <div class="radio-opt" onclick="selRadio(this,'umore')">😤 Irritabile</div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <div class="field-label">Ho dormito</div>
+    <div class="radio-group">
+      <div class="radio-opt" onclick="selRadio(this,'sonno')">Poco e male</div>
+      <div class="radio-opt" onclick="selRadio(this,'sonno')">Con risvegli</div>
+      <div class="radio-opt" onclick="selRadio(this,'sonno')">Abbastanza</div>
+      <div class="radio-opt" onclick="selRadio(this,'sonno')">Profondo</div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <div class="field-label">La mia azione di oggi</div>
+    <textarea class="field-input" id="azione-oggi" placeholder="Es. Bevo 2 litri d'acqua prima delle 18. Faccio 10 min di cammino dopo pranzo."></textarea>
+  </div>
+
+  <button class="save-btn" onclick="salvaDiario()">Salva la giornata</button>
+  <div class="save-confirm" id="confirm-diario">✓ Salvato! Ottimo lavoro oggi.</div>
+</div>
+</div>
+
+<!-- CHECK-IN -->
+<div class="modal-overlay" id="modal-checkin" onclick="closeOnBg(event,'checkin')">
+<div class="modal-box">
+  <div class="modal-header">
+    <span class="modal-title">Check-in settimanale</span>
+    <button class="modal-close" onclick="closeModal('checkin')">×</button>
+  </div>
+  <div class="modal-icon"><i class="ti ti-chart-bar"></i></div>
+
+  <div class="checkin-item">
+    <div class="checkin-q">Come valuteresti la tua settimana in termini di alimentazione?</div>
+    <div class="stelle" id="stelle-alim" data-key="alim">
+      <span class="stella" onclick="selStella('alim',1)">☆</span>
+      <span class="stella" onclick="selStella('alim',2)">☆</span>
+      <span class="stella" onclick="selStella('alim',3)">☆</span>
+      <span class="stella" onclick="selStella('alim',4)">☆</span>
+      <span class="stella" onclick="selStella('alim',5)">☆</span>
+    </div>
+  </div>
+
+  <div class="checkin-item">
+    <div class="checkin-q">Quante sessioni di allenamento hai completato?</div>
+    <div class="radio-group">
+      <div class="radio-opt" onclick="selRadio(this,'sessioni')">Nessuna</div>
+      <div class="radio-opt" onclick="selRadio(this,'sessioni')">1 sessione</div>
+      <div class="radio-opt" onclick="selRadio(this,'sessioni')">2 sessioni</div>
+      <div class="radio-opt" onclick="selRadio(this,'sessioni')">Tutte e 3</div>
+    </div>
+  </div>
+
+  <div class="checkin-item">
+    <div class="checkin-q">Come si è comportato il gonfiore questa settimana?</div>
+    <div class="radio-group">
+      <div class="radio-opt" onclick="selRadio(this,'gonfiore-sett')">Peggiorato</div>
+      <div class="radio-opt" onclick="selRadio(this,'gonfiore-sett')">Uguale</div>
+      <div class="radio-opt" onclick="selRadio(this,'gonfiore-sett')">Leggermente migliorato</div>
+      <div class="radio-opt" onclick="selRadio(this,'gonfiore-sett')">Molto migliorato</div>
+    </div>
+  </div>
+
+  <div class="checkin-item">
+    <div class="checkin-q">Energia e umore questa settimana</div>
+    <div class="stelle" id="stelle-energia" data-key="energia">
+      <span class="stella" onclick="selStella('energia',1)">☆</span>
+      <span class="stella" onclick="selStella('energia',2)">☆</span>
+      <span class="stella" onclick="selStella('energia',3)">☆</span>
+      <span class="stella" onclick="selStella('energia',4)">☆</span>
+      <span class="stella" onclick="selStella('energia',5)">☆</span>
+    </div>
+  </div>
+
+  <div class="field-group" style="margin-top:.75rem">
+    <div class="field-label">Note e riflessioni</div>
+    <textarea class="field-input" id="note-checkin" placeholder="Cosa ha funzionato? Cosa vuoi migliorare la settimana prossima?"></textarea>
+  </div>
+
+  <button class="save-btn" onclick="salvaCheckin()">Salva il check-in</button>
+  <div class="save-confirm" id="confirm-checkin">✓ Check-in salvato. Settimana 3 sbloccata!</div>
+</div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="modal-overlay" id="modal-esercizi" onclick="closeOnBg(event,'esercizi')">
+<div class="modal-box">
+  <div class="modal-header">
+    <span class="modal-title">Guida esercizi</span>
+    <button class="modal-close" onclick="closeModal('esercizi')">×</button>
+  </div>
+
+  <div class="es-filter" id="es-filter">
+    <button class="es-filter-btn active" onclick="filtraEs('ginoide',this)">🔵 Ginoide</button>
+    <button class="es-filter-btn" onclick="filtraEs('androide',this)">🟢 Androide</button>
+    <button class="es-filter-btn" onclick="filtraEs('casa',this)">🏠 Casa</button>
+    <button class="es-filter-btn" onclick="filtraEs('palestra',this)">🏋️ Palestra</button>
+  </div>
+
+  <div id="es-list"></div>
+
+  <!-- MINI TIMER ESERCIZI -->
+  <div style="margin-top:1rem;background:#F7F5F0;border-radius:12px;padding:1rem;text-align:center">
+    <div style="font-size:12px;font-weight:600;color:#777;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem">Timer recupero</div>
+    <div class="timer-circle" id="es-timer-circle">
+      <div class="timer-num" id="es-timer-num">60</div>
+      <div class="timer-phase">secondi</div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:.5rem">
+      <button onclick="setEsTimer(30)" style="padding:7px 14px;border:1.5px solid #E0DDD8;border-radius:8px;font-size:12px;background:#fff;cursor:pointer">30s</button>
+      <button onclick="setEsTimer(60)" style="padding:7px 14px;border:1.5px solid #E0DDD8;border-radius:8px;font-size:12px;background:#fff;cursor:pointer">60s</button>
+      <button onclick="setEsTimer(90)" style="padding:7px 14px;border:1.5px solid #E0DDD8;border-radius:8px;font-size:12px;background:#fff;cursor:pointer">90s</button>
+    </div>
+    <button class="timer-btn" id="es-timer-btn" onclick="toggleEsTimer()" style="margin-top:.75rem;padding:10px 28px">▶ Avvia</button>
+  </div>
+</div>
+</div>
+
+<!-- SENSAZIONI PASTO -->
+<div class="modal-overlay" id="modal-planner" onclick="closeOnBg(event,'planner')">
+<div class="modal-box">
+  <div class="modal-header">
+    <span class="modal-title">Sensazioni dopo il pasto</span>
+    <button class="modal-close" onclick="closeModal('planner')">×</button>
+  </div>
+  <div class="modal-icon"><i class="ti ti-salad"></i></div>
+
+  <div class="field-group">
+    <div class="field-label">Quale pasto?</div>
+    <div class="radio-group">
+      <div class="radio-opt" onclick="selRadio(this,'pasto-tipo')">☀️ Colazione</div>
+      <div class="radio-opt" onclick="selRadio(this,'pasto-tipo')">🍽 Pranzo</div>
+      <div class="radio-opt" onclick="selRadio(this,'pasto-tipo')">🌙 Cena</div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <div class="field-label">Come ti sei sentita subito dopo?</div>
+    <div class="radio-group">
+      <div class="radio-opt" onclick="selRadio(this,'pasto-dopo')">Leggera ed energica</div>
+      <div class="radio-opt" onclick="selRadio(this,'pasto-dopo')">Sazia e a posto</div>
+      <div class="radio-opt" onclick="selRadio(this,'pasto-dopo')">Gonfia o pesante</div>
+      <div class="radio-opt" onclick="selRadio(this,'pasto-dopo')">Sonnolenta</div>
+      <div class="radio-opt" onclick="selRadio(this,'pasto-dopo')">Ancora fame</div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <div class="field-label">Gonfiore addominale</div>
+    <div class="radio-group">
+      <div class="radio-opt" onclick="selRadio(this,'pasto-gonf')">Assente</div>
+      <div class="radio-opt" onclick="selRadio(this,'pasto-gonf')">Lieve</div>
+      <div class="radio-opt" onclick="selRadio(this,'pasto-gonf')">Moderato</div>
+      <div class="radio-opt" onclick="selRadio(this,'pasto-gonf')">Forte</div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <div class="field-label">Hai fatto la camminata post-pasto?</div>
+    <div class="radio-group">
+      <div class="radio-opt" onclick="selRadio(this,'pasto-walk')">Sì — 10+ min</div>
+      <div class="radio-opt" onclick="selRadio(this,'pasto-walk')">Breve — meno di 10 min</div>
+      <div class="radio-opt" onclick="selRadio(this,'pasto-walk')">No</div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <div class="field-label">Note rapide</div>
+    <textarea class="field-input" id="note-pasto" placeholder="Cosa hai mangiato? C'era qualcosa di diverso? Come ti sentivi prima del pasto?" style="min-height:60px"></textarea>
+  </div>
+
+  <button class="save-btn" onclick="salvaPasto()">Salva</button>
+  <div class="save-confirm" id="confirm-pasto">✓ Salvato!</div>
+</div>
+</div>
+
+<!-- ACQUA -->
+<div class="modal-overlay" id="modal-acqua" onclick="closeOnBg(event,'acqua')">
+<div class="modal-box">
+  <div class="modal-header">
+    <span class="modal-title">Tracker idratazione</span>
+    <button class="modal-close" onclick="closeModal('acqua')">×</button>
+  </div>
+  <div class="modal-icon"><i class="ti ti-droplets"></i></div>
+  <div class="acqua-count" id="acqua-count">0</div>
+  <div class="acqua-sub" id="acqua-sub">bicchieri di oggi · obiettivo: 8</div>
+  <div class="acqua-bicchieri" id="acqua-bicchieri"></div>
+  <div style="background:#FAF3DC;border-radius:10px;padding:.75rem 1rem;font-size:12px;color:#7A5800;margin-bottom:.75rem;line-height:1.5">
+    💡 Formula Walkabout: il tuo peso ÷ 7 = bicchieri al giorno.<br>Bevi lontano dai pasti — 15 min prima o 90 min dopo.
+  </div>
+  <button class="acqua-reset" onclick="resetAcqua()">Azzera per oggi</button>
+</div>
+</div>
+
+<!-- RESPIRO -->
+<div class="modal-overlay" id="modal-respiro" onclick="closeOnBg(event,'respiro')">
+<div class="modal-box">
+  <div class="modal-header">
+    <span class="modal-title">Tecnica 4+1+4</span>
+    <button class="modal-close" onclick="closeModal('respiro')">×</button>
+  </div>
+  <div style="background:#FAF3DC;border-radius:10px;padding:.75rem 1rem;font-size:13px;color:#7A5800;margin-bottom:1rem;line-height:1.5">
+    4 respiri lenti · 1 pensiero di gratitudine · primi 4 bocconi masticati 20 volte.<br>
+    <strong>Attiva il parasimpatico in 90 secondi.</strong>
+  </div>
+
+  <div class="timer-circle" id="resp-circle">
+    <div class="timer-num" id="resp-num">4</div>
+    <div class="timer-phase" id="resp-phase">respiri</div>
+  </div>
+
+  <div class="timer-steps">
+    <div class="t-step active" id="rstep-1">4</div>
+    <div class="t-step" id="rstep-2">1</div>
+    <div class="t-step" id="rstep-3">4</div>
+  </div>
+
+  <div class="timer-instruction" id="resp-instr">Premi avvia per iniziare il rituale del pasto</div>
+  <button class="timer-btn" id="resp-btn" onclick="toggleRespiro()" style="margin-top:1rem">▶ Avvia</button>
+</div>
+</div>
+
+<script>
+// ─── CALENDARIO MENSILE ──────────────────────────────────
+(function(){
+  var cal=document.getElementById('monthly-cal');
+  var startDay=3,daysInMonth=31,today=17;
+  var energia={1:4,2:3,3:5,4:4,5:2,6:3,7:4,8:5,9:3,10:4,11:2,12:3,13:4,14:3,15:5,16:2,17:4};
+  for(var i=0;i<startDay;i++){var d=document.createElement('div');d.className='m-day empty';cal.appendChild(d);}
+  for(var day=1;day<=daysInMonth;day++){
+    var d=document.createElement('div');
+    if(day===today){d.className='m-day today';}
+    else if(day>today){d.className='m-day future';}
+    else{var en=energia[day]||0;d.className=en>=4?'m-day done-high':en>=3?'m-day done-med':'m-day done-low';d.title='Energia: '+en+'/5';}
+    d.textContent=day;cal.appendChild(d);
+  }
+})();
+
+// ─── MODAL ────────────────────────────────────────────────
+function openModal(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  document.body.style.overflow='hidden';
+  if(id==='esercizi') renderEsercizi('ginoide');
+  if(id==='acqua') renderAcqua();
+}
+function closeModal(id){
+  document.getElementById('modal-'+id).classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeOnBg(e,id){if(e.target===document.getElementById('modal-'+id))closeModal(id);}
+
+// ─── RADIO / STELLE ───────────────────────────────────────
+function selRadio(el,group){
+  var els=el.parentNode.querySelectorAll('.radio-opt');
+  els.forEach(function(e){e.classList.remove('sel');});
+  el.classList.add('sel');
+}
+var stelleVals={};
+function selStella(key,n){
+  stelleVals[key]=n;
+  var container=document.getElementById('stelle-'+key);
+  var stars=container.querySelectorAll('.stella');
+  stars.forEach(function(s,i){s.textContent=i<n?'★':'☆';});
+}
+
+// ─── DIARIO ───────────────────────────────────────────────
+function salvaDiario(){
+  var confirm=document.getElementById('confirm-diario');
+  confirm.style.display='block';
+  setTimeout(function(){confirm.style.display='none';},3000);
+}
+
+// ─── CHECKIN ──────────────────────────────────────────────
+function salvaCheckin(){
+  var confirm=document.getElementById('confirm-checkin');
+  confirm.style.display='block';
+  setTimeout(function(){confirm.style.display='none';},3000);
+}
+
+// ─── ESERCIZI ─────────────────────────────────────────────
+var ESERCIZI={
+  ginoide:[
+    {n:'Squat corpo libero',d:'4 × 15 rip · Riposo 45 sec',note:'Piedi larghezza spalle, ginocchia fuori, schiena neutra'},
+    {n:'Hip Thrust (glutei)',d:'4 × 12 rip · Riposo 45 sec',note:'Spingere con i talloni, pausa 2 sec in alto'},
+    {n:'Affondi alternati',d:'3 × 12 per gamba · Riposo 45 sec',note:'Busto eretto, ginocchio posteriore sfiora terra'},
+    {n:'Abduzioni laterali',d:'3 × 15 per lato · Riposo 30 sec',note:'Movimento lento e controllato'},
+    {n:'Plank frontale',d:'3 × 30 sec · Riposo 45 sec',note:'Corpo in linea, ombelico in, respiro costante'},
+    {n:'Dead Bug',d:'3 × 8 per lato · Riposo 30 sec',note:'Lombare incollata a terra per tutta la serie'},
+  ],
+  androide:[
+    {n:'Squat goblet',d:'4 × 12 rip · Riposo 60 sec',note:'Manubrio al petto, discesa profonda, schiena verticale'},
+    {n:'Stacchi rumeni',d:'4 × 12 rip · Riposo 60 sec',note:'Schiena neutra, cerniera all\'anca, senti gli ischiocrurali'},
+    {n:'Plank con drag',d:'3 × 8 per lato · Riposo 45 sec',note:'Non ruotare il bacino mentre trascini il peso'},
+    {n:'Pallof press',d:'3 × 12 per lato · Riposo 30 sec',note:'Core in tensione massima, estendi lentamente'},
+    {n:'Dead Bug',d:'3 × 8 per lato · Riposo 30 sec',note:'Anti-rotazione — zona core androide'},
+    {n:'Step-up su panca',d:'3 × 10 per gamba · Riposo 45 sec',note:'Spingere con il tallone del piede sulla panca'},
+  ],
+  casa:[
+    {n:'Squat corpo libero',d:'4 × 15 rip · Riposo 45 sec',note:'Nessun attrezzo — focus sulla tecnica'},
+    {n:'Ponte glutei',d:'4 × 15 rip · Riposo 30 sec',note:'Piedi vicini ai glutei, spingere con i talloni'},
+    {n:'Push-up',d:'3 × 10 rip · Riposo 45 sec',note:'Sulle ginocchia se necessario, gomiti a 45°'},
+    {n:'Superman',d:'3 × 12 + pausa 2 sec',note:'Braccia avanti, solleva lentamente'},
+    {n:'Plank frontale',d:'3 × 30 sec · Riposo 45 sec',note:'Corpo in linea'},
+    {n:'Mountain climbers lenti',d:'3 × 12 per gamba',note:'Schiena piatta, core attivo'},
+  ],
+  palestra:[
+    {n:'Squat con bilanciere',d:'4 × 10 rip · Riposo 90 sec',note:'Tecnica prima del carico'},
+    {n:'Leg press',d:'3 × 15 rip · Riposo 60 sec',note:'Piedi a larghezza spalle, non bloccare le ginocchia'},
+    {n:'Lat machine',d:'4 × 10 rip · Riposo 60 sec',note:'Tira verso il petto, pausa 1 sec in basso'},
+    {n:'Chest press manubri',d:'4 × 12 rip · Riposo 60 sec',note:'Gomiti a 45°, abbassa lentamente'},
+    {n:'Farmer carry',d:'3 × 30 mt · Riposo 90 sec',note:'Spalle basse, core attivo per tutta la distanza'},
+    {n:'Alzate laterali',d:'3 × 15 rip · Riposo 30 sec',note:'Non usare il trapezio, movimento puro di spalla'},
+  ]
+};
+
+var currentEsFilter='ginoide';
+function filtraEs(tipo,btn){
+  currentEsFilter=tipo;
+  document.querySelectorAll('.es-filter-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  renderEsercizi(tipo);
+}
+function renderEsercizi(tipo){
+  var list=document.getElementById('es-list');
+  var es=ESERCIZI[tipo]||[];
+  list.innerHTML=es.map(function(e,i){
+    return '<div class="es-card">'
+      +'<div class="es-num">'+(i+1)+'</div>'
+      +'<div class="es-info">'
+      +'<div class="es-name">'+e.n+'</div>'
+      +'<div class="es-detail">'+e.d+'</div>'
+      +'<div class="es-detail" style="margin-top:2px;color:#555">'+e.note+'</div>'
+      +'</div>'
+      +'<button class="es-timer-btn" onclick="setEsTimer(60)">⏱ Timer</button>'
+      +'</div>';
+  }).join('');
+}
+
+// Timer esercizi
+var esTimerVal=60,esTimerMax=60,esTimerRunning=false,esTimerInterval=null;
+function setEsTimer(s){
+  clearInterval(esTimerInterval);esTimerRunning=false;
+  esTimerVal=s;esTimerMax=s;
+  document.getElementById('es-timer-num').textContent=s;
+  document.getElementById('es-timer-circle').classList.remove('active');
+  document.getElementById('es-timer-btn').textContent='▶ Avvia';
+}
+function toggleEsTimer(){
+  if(esTimerRunning){clearInterval(esTimerInterval);esTimerRunning=false;document.getElementById('es-timer-btn').textContent='▶ Avvia';document.getElementById('es-timer-circle').classList.remove('active');return;}
+  esTimerRunning=true;document.getElementById('es-timer-btn').textContent='⏸ Pausa';document.getElementById('es-timer-circle').classList.add('active');
+  esTimerInterval=setInterval(function(){
+    esTimerVal--;
+    document.getElementById('es-timer-num').textContent=esTimerVal;
+    if(esTimerVal<=0){clearInterval(esTimerInterval);esTimerRunning=false;document.getElementById('es-timer-btn').textContent='▶ Avvia';document.getElementById('es-timer-circle').classList.remove('active');esTimerVal=esTimerMax;}
+  },1000);
+}
+
+// ─── PASTO
+function salvaPasto(){
+  var confirm=document.getElementById('confirm-pasto');
+  confirm.style.display='block';
+  setTimeout(function(){confirm.style.display='none';},2500);
+}
+
+// ─── ACQUA ───────────────────────────────────────────────
+var acquaCount=0,acquaTarget=8;
+function renderAcqua(){
+  document.getElementById('acqua-count').textContent=acquaCount;
+  document.getElementById('acqua-sub').textContent='bicchieri di oggi · obiettivo: '+acquaTarget;
+  var html='';
+  for(var i=1;i<=acquaTarget;i++){
+    var pieno=i<=acquaCount;
+    html+='<div class="bicchiere'+(pieno?' pieno':'')+'" onclick="toggleAcqua('+i+')">'+( pieno?'💧':'🫙')+'</div>';
+  }
+  document.getElementById('acqua-bicchieri').innerHTML=html;
+}
+function toggleAcqua(n){
+  acquaCount=acquaCount===n?n-1:n;
+  renderAcqua();
+}
+function resetAcqua(){acquaCount=0;renderAcqua();}
+
+// ─── RESPIRO ─────────────────────────────────────────────
+var respPhase=0,respRunning=false,respInterval=null;
+var FASI=[
+  {label:'Fase 1',instr:'Fai 4 respiri lenti e profondi. Inspira dal naso, espira dalla bocca.',durata:30,step:1},
+  {label:'Fase 2',instr:'Pensa a 1 cosa per cui sei grata oggi. Un momento piccolo va benissimo.',durata:20,step:2},
+  {label:'Fase 3',instr:'Inizia a mangiare. Mastica i primi 4 bocconi 20 volte ciascuno.',durata:40,step:3}
+];
+var respCountdown=30;
+
+function toggleRespiro(){
+  if(respRunning){clearInterval(respInterval);respRunning=false;document.getElementById('resp-btn').textContent='▶ Avvia';document.getElementById('resp-circle').classList.remove('active');return;}
+  respPhase=0;respRunning=true;startRespFase();
+}
+function startRespFase(){
+  if(respPhase>=FASI.length){endRespiro();return;}
+  var f=FASI[respPhase];
+  respCountdown=f.durata;
+  document.getElementById('resp-num').textContent=respCountdown;
+  document.getElementById('resp-phase').textContent='sec';
+  document.getElementById('resp-instr').textContent=f.instr;
+  document.getElementById('resp-btn').textContent='⏸ Pausa';
+  document.getElementById('resp-circle').classList.add('active');
+  for(var i=1;i<=3;i++){
+    var s=document.getElementById('rstep-'+i);
+    s.className='t-step'+(i<f.step?' done':i===f.step?' active':'');
+  }
+  clearInterval(respInterval);
+  respInterval=setInterval(function(){
+    respCountdown--;
+    document.getElementById('resp-num').textContent=respCountdown;
+    if(respCountdown<=0){clearInterval(respInterval);respPhase++;startRespFase();}
+  },1000);
+}
+function endRespiro(){
+  respRunning=false;
+  document.getElementById('resp-num').textContent='✓';
+  document.getElementById('resp-phase').textContent='';
+  document.getElementById('resp-instr').textContent='Perfetto. Ora sei pronta per il tuo pasto. Buon appetito!';
+  document.getElementById('resp-btn').textContent='Rifai';
+  document.getElementById('resp-circle').classList.remove('active');
+  document.getElementById('resp-btn').onclick=function(){
+    respPhase=0;respRunning=false;
+    document.getElementById('resp-num').textContent='4';
+    document.getElementById('resp-phase').textContent='respiri';
+    document.getElementById('resp-instr').textContent='Premi avvia per iniziare il rituale del pasto';
+    document.getElementById('resp-btn').textContent='▶ Avvia';
+    document.getElementById('resp-btn').onclick=toggleRespiro;
+  };
+}
+</script>
+</body>
+</html>
